@@ -9,7 +9,7 @@ namespace scanner {
     bool alive       = true;
 
     std::mutex mtx;
-    std::thread mainLoop;
+    std::thread *mainLoop = nullptr;
     std::condition_variable cv;
     std::string accessCodeHead = "BNTTCNID";
 
@@ -24,11 +24,9 @@ namespace scanner {
         if (loginByCard && cardStatus && buffer.size () > 8 && CheckAccessCode (buffer)) {
             std::string accessCode = "";
             for (size_t i = 8; i < buffer.size (); i++) accessCode += buffer[i];
-            bool accepted = cardCallback (accessCode, "");
-            if (accepted) {
-                buffer.clear ();
-                return;
-            }
+            cardCallback (accessCode, "");
+            buffer.clear ();
+            return;
         }
         qrCallback (buffer);
         buffer.clear ();
@@ -72,8 +70,8 @@ extern "C" {
 
     void Init () {
         // std::cout << "[QR][T613] Init" << std::endl;
-        scanner::mainLoop = std::thread (scanner::MainLoop);
-        scanner::mainLoop.detach ();
+        scanner::mainLoop = new std::thread (scanner::MainLoop);
+        scanner::mainLoop->detach ();
     }
 
     void Exit () {

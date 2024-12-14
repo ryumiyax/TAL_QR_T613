@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <toml.h>
-#include <ReadBarcode.h>
+// #include <ReadBarcode.h>
 #include <stddef.h>
 #include <stdint.h>
 

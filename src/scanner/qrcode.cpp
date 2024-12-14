@@ -44,7 +44,7 @@ namespace scanner::qrcode {
     bool alive = true;
     std::mutex loopMutex;
     std::condition_variable loopCV;
-    std::thread mainLoop;
+    std::thread *mainLoop = nullptr;
     void MainLoop () {
         std::unique_lock<std::mutex> loopLock(loopMutex);
         while (alive) {
@@ -95,8 +95,8 @@ namespace scanner::qrcode {
         tx_scanner_decode_data_fun_register (scan_callback);
         tx_scanner_comm_state_fun_register (state_callback);
         tx_scanner_init ();
-        mainLoop = std::thread (MainLoop);
-        mainLoop.detach ();
+        mainLoop = new std::thread (MainLoop);
+        mainLoop->detach ();
     }
 
     void Exit () {

@@ -1,0 +1,8 @@
+LIBRARY "qr_t613"
+EXPORTS
+    InitCardReader
+    InitQRScanner
+    UpdateStatus
+    InitVersion
+    Init
+    Exit
